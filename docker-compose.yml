@@ -13,7 +13,6 @@ services:
     networks:
       - laravel-network
     depends_on:
-      - db
       - redis
 
   nginx:
@@ -29,22 +28,6 @@ services:
       - laravel-network
     depends_on:
       - app
-
-  db:
-    image: mysql:8.0
-    container_name: laravel-db
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: image-csv
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-    ports:
-      - "3306:3306"
-    volumes:
-      - dbdata:/var/lib/mysql
-    networks:
-      - laravel-network
 
   redis:
     image: redis:alpine
