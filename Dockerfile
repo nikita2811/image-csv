@@ -10,13 +10,14 @@ COPY . .
 RUN npm run build   # creates public/build/
 
 # Stage 2: PHP backend
-FROM php:8.2-fpm-alpine AS backend
+FROM php:8.2-fpm AS backend
 
 WORKDIR /var/www
 
-RUN apk add --no-cache \
-    git unzip curl libpng-dev libjpeg-turbo-dev libwebp-dev libxpm-dev freetype-dev \
-    oniguruma-dev libxml2-dev zip libzip-dev \
+RUN apt-get update && apt-get install -y \
+    git unzip curl libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev libxpm-dev \
+    libonig-dev libxml2-dev zip libzip-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
