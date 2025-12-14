@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ImageVariant extends Model
+{
+    //
+    protected $fillable = [
+        'image_id',
+        'path'
+    ];
+    public function image()
+    {
+        return $this->belongsTo(Image::class);
+    }
+}
