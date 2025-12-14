@@ -15,9 +15,9 @@ FROM php:8.2-fpm AS backend
 WORKDIR /var/www
 
 RUN apt-get update && apt-get install -y \
-    git unzip curl libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev libxpm-dev \
+    git unzip curl libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
     libonig-dev libxml2-dev zip libzip-dev supervisor \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip xml pdo_sqlite
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
