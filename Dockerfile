@@ -45,8 +45,7 @@ RUN chown -R www-data:www-data /var/www/html
 
 # Configure environment
 RUN cp .env.example .env && \
-    echo 'DB_DATABASE=/var/www/html/database/database.sqlite' >> .env && \
-    echo 'ASSET_URL=${APP_URL}/build' >> .env
+    echo 'DB_DATABASE=/var/www/html/database/database.sqlite' >> .env
 
 # Create SQLite database file
 RUN touch database/database.sqlite && chown www-data:www-data database/database.sqlite
