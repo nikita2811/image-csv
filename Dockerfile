@@ -40,15 +40,15 @@ COPY nginx/default.conf /etc/nginx/http.d/default.conf
 # Configure PHP-FPM to listen on TCP
 RUN sed -i 's/^listen = .*/listen = 127.0.0.1:9000/' /usr/local/etc/php-fpm.d/www.conf
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html
-
-# Configure environment
+# Configure environment (before composer install)
 RUN cp .env.example .env && \
     echo 'DB_DATABASE=/var/www/html/database/database.sqlite' >> .env
 
 # Create SQLite database file
 RUN touch database/database.sqlite && chown www-data:www-data database/database.sqlite
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
