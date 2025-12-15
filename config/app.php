@@ -123,4 +123,19 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Trusted Proxies
+    |--------------------------------------------------------------------------
+    |
+    | Configure trusted proxies to properly detect HTTPS when behind a load
+    | balancer or reverse proxy (e.g., on Render, Heroku, AWS, etc.).
+    |
+    */
+
+    'trusted_proxies' => ['*'],
+    'trusted_headers' => [
+        'FORWARDED' => env('TRUSTED_HEADERS_FORWARDED', 'HEADER_X_FORWARDED_FOR|HEADER_X_FORWARDED_PROTO|HEADER_X_FORWARDED_HOST'),
+    ],
+
 ];
