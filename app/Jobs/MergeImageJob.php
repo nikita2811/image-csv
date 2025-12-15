@@ -6,7 +6,7 @@ use App\Models\ImageUpload;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
-use App\Jobs\GenerateVariantsJob;
+use App\Jobs\GenerateVariantJob;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\User;
 use App\Models\Image;
@@ -56,6 +56,6 @@ class MergeImageJob implements ShouldQueue
 
         $uploadId = $this->upload->id;
 
-        dispatch(new GenerateVariantsJob($finalPath, $uploadId));
+        dispatch(new GenerateVariantJob($finalPath, $uploadId));
     }
 }
