@@ -25,6 +25,9 @@ RUN apk add --no-cache \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Copy built frontend assets from Node stage
+COPY --from=frontend /var/www/public/build /var/www/html/public/build
+
 # Copy application code
 COPY . /var/www/html
 
