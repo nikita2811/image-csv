@@ -14,7 +14,7 @@ use App\Models\ImageVariant;
 use Intervention\Image\Drivers\Gd\Driver;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Strong;
 
-class GenerateVariantsJob implements ShouldQueue
+class GenerateVariantJob implements ShouldQueue
 {
     use Dispatchable, Queueable;
     public $finalPath;
