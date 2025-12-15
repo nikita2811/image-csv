@@ -37,6 +37,10 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Copy nginx config
 COPY nginx/default.conf /etc/nginx/http.d/default.conf
 
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Configure PHP-FPM to listen on TCP
 RUN sed -i 's/^listen = .*/listen = 127.0.0.1:9000/' /usr/local/etc/php-fpm.d/www.conf
 
@@ -52,17 +56,10 @@ RUN touch database/database.sqlite && chown www-data:www-data database/database.
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
-
-# Run migrations and optimize
-RUN php artisan migrate --force && \
-    php artisan config:clear && \
-    php artisan route:clear && \
-    php artisan view:clear && \
-    php artisan optimize
+# Install PHP dependencies (skip scripts - will run at startup)
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 EXPOSE 80 9000
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/local/bin/entrypoint.sh"]
 
 
