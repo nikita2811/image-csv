@@ -18,7 +18,7 @@ WORKDIR /var/www/html
 # Install system dependencies
 RUN apk add --no-cache \
     libpng-dev libjpeg-turbo-dev freetype-dev \
-    oniguruma-dev libxml2-dev supervisor sqlite-dev \
+    oniguruma-dev libxml2-dev supervisor sqlite-dev nginx \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd pdo_sqlite \
     && apk del libpng-dev libjpeg-turbo-dev freetype-dev oniguruma-dev libxml2-dev sqlite-dev
 
@@ -30,6 +30,9 @@ COPY . /var/www/html
 
 # Copy supervisor config
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copy nginx config
+COPY nginx/default.conf /etc/nginx/http.d/default.conf
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
@@ -51,7 +54,7 @@ RUN php artisan key:generate
 RUN php artisan migrate --force
 
 
-EXPOSE 9000
+EXPOSE 80 9000
 CMD ["/usr/bin/supervisord"]
 
 
