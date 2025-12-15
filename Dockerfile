@@ -59,6 +59,11 @@ RUN php artisan key:generate
 # Run migrations
 RUN php artisan migrate --force
 
+# Clear caches and optimize
+RUN php artisan config:clear && \
+    php artisan route:clear && \
+    php artisan view:clear && \
+    php artisan optimize
 
 EXPOSE 80 9000
 CMD ["/usr/bin/supervisord"]
