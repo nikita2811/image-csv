@@ -44,6 +44,9 @@ RUN sed -i 's/^listen = .*/listen = 127.0.0.1:9000/' /usr/local/etc/php-fpm.d/ww
 RUN cp .env.example .env && \
     echo 'DB_DATABASE=/var/www/html/database/database.sqlite' >> .env
 
+# Generate application key (needed for composer package:discover)
+RUN php artisan key:generate
+
 # Create SQLite database file
 RUN touch database/database.sqlite && chown www-data:www-data database/database.sqlite
 
@@ -52,9 +55,6 @@ RUN chown -R www-data:www-data /var/www/html
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
-
-# Generate application key
-RUN php artisan key:generate
 
 # Run migrations
 RUN php artisan migrate --force
