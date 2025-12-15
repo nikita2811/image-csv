@@ -16,18 +16,11 @@ FROM php:8.2-fpm-alpine
 WORKDIR /var/www/html
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd \
-    && a2enmod rewrite \
-    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    libpng-dev libjpeg-turbo-dev freetype-dev \
+    oniguruma-dev libxml2-dev supervisor sqlite-dev \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd pdo_sqlite \
+    && apk del libpng-dev libjpeg-turbo-dev freetype-dev oniguruma-dev libxml2-dev sqlite-dev
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
