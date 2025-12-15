@@ -43,7 +43,8 @@ RUN sed -i 's/^listen = .*/listen = 127.0.0.1:9000/' /usr/local/etc/php-fpm.d/ww
 # Configure environment (before composer install)
 RUN cp .env.example .env && \
     echo 'DB_DATABASE=/var/www/html/database/database.sqlite' >> .env && \
-    echo 'APP_KEY=base64:dummykeyforbuildtimeonly' >> .env
+    APP_KEY=$(openssl rand -base64 32) && \
+    echo "APP_KEY=base64:${APP_KEY}" >> .env
 
 # Create SQLite database file
 RUN touch database/database.sqlite && chown www-data:www-data database/database.sqlite
@@ -51,20 +52,12 @@ RUN touch database/database.sqlite && chown www-data:www-data database/database.
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
-# Install PHP dependencies (skip scripts to avoid key requirement)
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Generate application key (replace dummy key)
-RUN php artisan key:generate
-
-# Run composer scripts now that key exists
-RUN composer run-script post-autoload-dump
-
-# Run migrations
-RUN php artisan migrate --force
-
-# Clear caches and optimize
-RUN php artisan config:clear && \
+# Run migrations and optimize
+RUN php artisan migrate --force && \
+    php artisan config:clear && \
     php artisan route:clear && \
     php artisan view:clear && \
     php artisan optimize
