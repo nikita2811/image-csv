@@ -34,6 +34,9 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Copy nginx config
 COPY nginx/default.conf /etc/nginx/http.d/default.conf
 
+# Configure PHP-FPM to listen on TCP
+RUN sed -i 's/^listen = .*/listen = 127.0.0.1:9000/' /usr/local/etc/php-fpm.d/www.conf
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
