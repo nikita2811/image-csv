@@ -51,11 +51,14 @@ RUN touch database/database.sqlite && chown www-data:www-data database/database.
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install PHP dependencies (skip scripts to avoid key requirement)
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Generate application key (replace dummy key)
 RUN php artisan key:generate
+
+# Run composer scripts now that key exists
+RUN composer run-script post-autoload-dump
 
 # Run migrations
 RUN php artisan migrate --force
